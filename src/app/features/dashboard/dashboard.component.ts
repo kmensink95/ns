@@ -7,11 +7,10 @@ import * as StationActions from '../../store/actions/station.actions';
 import * as StationSelectors from '../../store/selectors/station.selectors';
 
 @Component({
-  selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  imports: [CommonModule],
 })
 export class DashboardComponent implements OnInit {
   private readonly store = inject(Store<AppState>);
