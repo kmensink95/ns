@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
 import { TrainStation } from '../../models/train-station.model';
@@ -14,6 +15,7 @@ import * as StationSelectors from '../../store/selectors/station.selectors';
 })
 export class DashboardComponent implements OnInit {
   private readonly store = inject(Store<AppState>);
+  private readonly router = inject(Router);
 
   stations$ = this.store.select(StationSelectors.selectFilteredStations);
   searchTerm$ = this.store.select(StationSelectors.selectSearchTerm);
@@ -28,5 +30,6 @@ export class DashboardComponent implements OnInit {
 
   onClickSelectStation(station: TrainStation): void {
     this.store.dispatch(StationActions.selectStation({ station }));
+    this.router.navigate(['/form']);
   }
 }
