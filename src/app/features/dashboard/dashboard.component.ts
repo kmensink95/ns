@@ -16,11 +16,7 @@ export class DashboardComponent implements OnInit {
   private readonly store = inject(Store<AppState>);
 
   stations$ = this.store.select(StationSelectors.selectFilteredStations);
-  selectedStation$ = this.store.select(StationSelectors.selectSelectedStation);
-  loading$ = this.store.select(StationSelectors.selectLoading);
-  error$ = this.store.select(StationSelectors.selectError);
   searchTerm$ = this.store.select(StationSelectors.selectSearchTerm);
-  stationCount$ = this.store.select(StationSelectors.selectStationCount);
 
   ngOnInit(): void {
     this.store.dispatch(StationActions.loadStations());
@@ -30,15 +26,7 @@ export class DashboardComponent implements OnInit {
     this.store.dispatch(StationActions.searchStations({ searchTerm }));
   }
 
-  onSelectStation(station: TrainStation): void {
+  onClickSelectStation(station: TrainStation): void {
     this.store.dispatch(StationActions.selectStation({ station }));
-  }
-
-  onClearSelection(): void {
-    this.store.dispatch(StationActions.clearSelection());
-  }
-
-  onClearSearch(): void {
-    this.store.dispatch(StationActions.clearSearch());
   }
 }
