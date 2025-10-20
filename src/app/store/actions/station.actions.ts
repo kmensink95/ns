@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { TrainStation } from '../../models/train-station.model';
 
-// Load Stations Actions
 export const loadStations = createAction('[Station] Load Stations');
 
 export const loadStationsSuccess = createAction(
@@ -14,7 +13,6 @@ export const loadStationsFailure = createAction(
   props<{ error: string }>()
 );
 
-// Search Actions
 export const searchStations = createAction(
   '[Station] Search Stations',
   props<{ searchTerm: string }>()
@@ -22,7 +20,6 @@ export const searchStations = createAction(
 
 export const clearSearch = createAction('[Station] Clear Search');
 
-// Selection Actions
 export const selectStation = createAction(
   '[Station] Select Station',
   props<{ station: TrainStation }>()
