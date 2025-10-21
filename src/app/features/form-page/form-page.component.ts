@@ -17,11 +17,12 @@ import * as StationSelectors from '../../store/selectors/station.selectors';
 import { FormService } from '../../services/form.service';
 import * as StationActions from '../../store/actions/station.actions';
 import { TrainStation } from '../../models/train-station.model';
+import { Router } from '@angular/router';
 
 interface FormModel {
   selectedTrainStation: FormControl<TrainStation | null>;
   title: FormControl<string>;
-  date: FormControl<string>;
+  date: FormControl<Date | null>;
   type: FormControl<'failure' | 'information' | 'service'>;
   description: FormControl<string>;
 }
@@ -35,7 +36,7 @@ interface FormModel {
 })
 export class FormPageComponent implements OnInit {
   private readonly store = inject(Store<AppState>);
-
+  private readonly router = inject(Router);
   private readonly formService = inject(FormService);
 
   selectedStation$ = this.store.select(StationSelectors.selectSelectedStation);
@@ -56,7 +57,7 @@ export class FormPageComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      date: new FormControl('', {
+      date: new FormControl(null, {
         nonNullable: true,
         validators: [Validators.required],
       }),
@@ -80,5 +81,6 @@ export class FormPageComponent implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) return;
     this.formService.setForm(this.form.getRawValue());
+    this.router.navigate(['/details']);
   }
 }
