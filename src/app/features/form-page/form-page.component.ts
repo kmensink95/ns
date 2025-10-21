@@ -78,6 +78,8 @@ export class FormPageComponent implements OnInit {
 
   onClickSelectStation(station: TrainStation): void {
     this.store.dispatch(StationActions.selectStation({ station }));
+    this.store.dispatch(StationActions.clearSearch());
+
     this.form.get('selectedTrainStation')?.setValue(station);
   }
 
