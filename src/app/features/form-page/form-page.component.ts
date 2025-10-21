@@ -65,7 +65,10 @@ export class FormPageComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      description: new FormControl('', { nonNullable: true }),
+      description: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(5)],
+      }),
     });
   }
 
@@ -76,6 +79,10 @@ export class FormPageComponent implements OnInit {
   onClickSelectStation(station: TrainStation): void {
     this.store.dispatch(StationActions.selectStation({ station }));
     this.form.get('selectedTrainStation')?.setValue(station);
+  }
+
+  onClickReset(): void {
+    this.store.dispatch(StationActions.clearSelection());
   }
 
   onSubmit(): void {

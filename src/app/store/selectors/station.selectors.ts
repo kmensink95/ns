@@ -28,18 +28,3 @@ export const selectLoading = createSelector(
   selectStationState,
   (state) => state.loading
 );
-
-export const selectError = createSelector(
-  selectStationState,
-  (state) => state.error
-);
-
-export const selectDutchStations = createSelector(
-  selectFilteredStations,
-  (stations) => stations.filter((station) => station.landCode === 'NL')
-);
-
-export const selectStationCount = createSelector(
-  selectFilteredStations,
-  (stations) => stations.length
-);
