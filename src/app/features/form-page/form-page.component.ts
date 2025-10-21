@@ -1,11 +1,26 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
-  FormBuilder,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+} from '@angular/core';
+import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  FormControl,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AppState } from '../../store';
+import { Store } from '@ngrx/store';
+import * as StationSelectors from '../../store/selectors/station.selectors';
+
+interface FormModel {
+  title: FormControl<string>;
+  date: FormControl<string>;
+  type: FormControl<'failure' | 'information' | 'service'>;
+  description: FormControl<string>;
+}
 
 @Component({
   standalone: true,
@@ -15,26 +30,31 @@ import { CommonModule } from '@angular/common';
   imports: [ReactiveFormsModule, CommonModule],
 })
 export class FormPageComponent implements OnInit {
-  form: FormGroup;
+  private readonly store = inject(Store<AppState>);
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.createForm();
-  }
+  station$ = this.store.select(StationSelectors.selectSelectedStation);
+
+  form!: FormGroup<FormModel>;
 
   ngOnInit(): void {
-    // initialization logic
+    this.form = new FormGroup<FormModel>({
+      title: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      date: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      type: new FormControl('failure', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      description: new FormControl('', { nonNullable: true }),
+    });
   }
 
   onSubmit(): void {
-    // Check if the form is valid
-  }
-
-  private createForm(): FormGroup {
-    return this.fb.group({
-      title: ['', Validators.required],
-      date: ['', Validators.required],
-      type: ['', Validators.required],
-      description: [''],
-    });
+    if (!this.form.invalid) return;
   }
 }
