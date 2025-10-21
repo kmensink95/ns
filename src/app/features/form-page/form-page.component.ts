@@ -14,8 +14,12 @@ import { CommonModule } from '@angular/common';
 import { AppState } from '../../store';
 import { Store } from '@ngrx/store';
 import * as StationSelectors from '../../store/selectors/station.selectors';
+import { FormService } from '../../services/form.service';
+import * as StationActions from '../../store/actions/station.actions';
+import { TrainStation } from '../../models/train-station.model';
 
 interface FormModel {
+  selectedTrainStation: FormControl<TrainStation | null>;
   title: FormControl<string>;
   date: FormControl<string>;
   type: FormControl<'failure' | 'information' | 'service'>;
@@ -32,12 +36,22 @@ interface FormModel {
 export class FormPageComponent implements OnInit {
   private readonly store = inject(Store<AppState>);
 
-  station$ = this.store.select(StationSelectors.selectSelectedStation);
+  private readonly formService = inject(FormService);
+
+  selectedStation$ = this.store.select(StationSelectors.selectSelectedStation);
+  stations$ = this.store.select(StationSelectors.selectFilteredStations);
+  searchTerm$ = this.store.select(StationSelectors.selectSearchTerm);
 
   form!: FormGroup<FormModel>;
 
   ngOnInit(): void {
+    this.store.dispatch(StationActions.loadStations());
+
     this.form = new FormGroup<FormModel>({
+      selectedTrainStation: new FormControl<TrainStation | null>(null, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
       title: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required],
@@ -54,7 +68,17 @@ export class FormPageComponent implements OnInit {
     });
   }
 
+  onSearch(searchTerm: string): void {
+    this.store.dispatch(StationActions.searchStations({ searchTerm }));
+  }
+
+  onClickSelectStation(station: TrainStation): void {
+    this.store.dispatch(StationActions.selectStation({ station }));
+    this.form.get('selectedTrainStation')?.setValue(station);
+  }
+
   onSubmit(): void {
-    if (!this.form.invalid) return;
+    if (this.form.invalid) return;
+    this.formService.setForm(this.form.getRawValue());
   }
 }
